@@ -1,0 +1,19 @@
+name: Build and Push Docker Image
+
+on: [workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build ./api/ -t abdelrhmanmasoud/qrcodebackend:latest
+
+      - name: Push Docker image
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKERHUB_SECERET }}
+          docker push abdelrhmanmasoud/qrcodebackend:latest
