@@ -26,10 +26,12 @@ app.add_middleware(
 # AWS S3 Configuration
 s3 = boto3.client(
     's3',
+    region_name='us-east-1', # Change to your region
     aws_access_key_id= os.getenv("AWS_ACCESS_KEY"),
-    aws_secret_access_key= os.getenv("AWS_SECRET_KEY"))
+    aws_secret_access_key= os.getenv("AWS_SECRET_KEY")
+)
 
-bucket_name = 'YOUR_BUCKET_NAME' # Add your bucket name here
+bucket_name = 'qr-code-for-project-1' # Add your bucket name here
 
 @app.post("/generate-qr/")
 async def generate_qr(url: str):
@@ -61,5 +63,5 @@ async def generate_qr(url: str):
         s3_url = f"https://{bucket_name}.s3.amazonaws.com/{file_name}"
         return {"qr_code_url": s3_url}
     except Exception as e:
+        print("Error uploading to S3:", e)
         raise HTTPException(status_code=500, detail=str(e))
-    
